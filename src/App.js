@@ -5,17 +5,17 @@ import {PictureViewer} from './components/PictureViewer';
 import {NextButton} from './components/NextButton';
 import {PrevButton} from './components/PrevButton';
 
-let currentDate = new Date();
-let year = currentDate.getFullYear();
-let month = 1 + currentDate.getMonth();
-let date = currentDate.getDate();
-
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.currentDate = new Date();
+    this.year = this.currentDate.getFullYear();
+    this.month = this.currentDate.getMonth();
+    this.date = this.currentDate.getDate();
     this.state = {
-      imageSrc: '',
-      imageDate: `&date=${year}-0${month}-${date}`,
+      imageDate: `&date=${this.year}-${this.month}-${this.date}`,
+      imageSrc: ``,
+      apiKey: `https://api.nasa.gov/planetary/apod?api_key=6TzBatUoY7aANRUEfYIAFBPxcQ9kpQsgu3x2Bhlg`
     }; 
     this.searchNASA = this.searchNASA.bind(this);
     this.handleNext = this.handleNext.bind(this);
@@ -23,21 +23,25 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.searchNASA();
+    this.searchNASA(this.state.apiKey);
   }
 
-  searchNASA() {
-    Nasa.getPic(`https://api.nasa.gov/planetary/apod?api_key=6TzBatUoY7aANRUEfYIAFBPxcQ9kpQsgu3x2Bhlg${this.state.imageDate}`).then(src => {
+  searchNASA(api) {
+    Nasa.getPic(api).then(src => {
       this.setState( {imageSrc:src} );
     });
   }
 
   handleNext() {
-    this.setState(() => { return { imageDate: `${year}-${month}-${date + 1}` }; });
+    console.log(this.state.apiKey);
+    console.log(this.state.imageSrc);
+    this.searchNASA(this.state.apiKey);
   }
 
   handlePrev() {
-    this.setState(() => { return { imageDate: `${year}-${month}-${date - 1}` }; });
+    console.log(this.state.apiKey);
+    console.log(this.state.imageSrc);
+    this.searchNASA(this.state.apiKey);
   }
 
   render() {
