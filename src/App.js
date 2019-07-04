@@ -9,17 +9,20 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.currentDate = new Date();
-    this.year = this.currentDate.getFullYear();
+    /*this.year = this.currentDate.getFullYear();
     this.month = this.currentDate.getMonth();
-    this.date = this.currentDate.getDate();
+    this.date = this.currentDate.getDate();*/
     this.state = {
-      imageDate: `&date=${this.year}-${this.month}-${this.date}`,
+      year: `${this.currentDate.getFullYear()}`,
+      month: `${this.currentDate.getMonth()+1}`,
+      date: `${this.currentDate.getDate()}`,
       imageSrc: ``,
-      apiKey: `https://api.nasa.gov/planetary/apod?api_key=6TzBatUoY7aANRUEfYIAFBPxcQ9kpQsgu3x2Bhlg`
+      apiKey: `https://api.nasa.gov/planetary/apod?api_key=6TzBatUoY7aANRUEfYIAFBPxcQ9kpQsgu3x2Bhlg`,
     }; 
     this.searchNASA = this.searchNASA.bind(this);
-    this.handleNext = this.handleNext.bind(this);
-    this.handlePrev = this.handlePrev.bind(this);
+    this.changeImageDate = this.changeImageDate.bind(this);
+    this.changeNext = this.changeNext.bind(this);
+    this.changePrev = this.changePrev.bind(this);
   }
 
   componentDidMount() {
@@ -32,24 +35,34 @@ class App extends React.Component {
     });
   }
 
-  handleNext() {
-    console.log(this.state.apiKey);
-    console.log(this.state.imageSrc);
-    this.searchNASA(this.state.apiKey);
+  changeImageDate(yr,mn,dt)
+  {
+    let year = yr;
+    let month = mn;
+    let date = dt;
+    if(year < 1995 && month < 6 && date < 16) {
+      alert('There are no pics later than June 16, 1995!');
+    }
+    else {
+      this.setState({ year: year, month: month, date: date});
+      this.searchNASA(this.state.apiKey + `&date=${this.state.year}-${this.state.month}-${this.state.date}`);
+    }
   }
 
-  handlePrev() {
-    console.log(this.state.apiKey);
-    console.log(this.state.imageSrc);
-    this.searchNASA(this.state.apiKey);
+  changeNext(yr,mn,dt) {
+    this.changeImageDate(yr,mn,dt);
+  }
+
+  changePrev(yr,mn,dt) {
+    this.changeImageDate(yr,mn,dt);
   }
 
   render() {
     return(
       <div>
         <h1>NASA's Pic of the Day</h1>
-        <PrevButton onClick={this.handlePrev} />
-        <NextButton onClick={this.handleNext} />
+        <PrevButton onClick={this.changePrev} year={this.state.year} month={this.state.month} date={this.state.date} />
+        <NextButton onClick={this.changeNext} year={this.state.year} month={this.state.month} date={this.state.date} />
         <PictureViewer src={this.state.imageSrc} />
       </div>
     );
