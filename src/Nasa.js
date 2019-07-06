@@ -5,7 +5,7 @@ export const Nasa = {
             return response.json();
           }).then(response => {
 
-                    return response.url;      
+                    return [response.url, response.explanation];      
                 
             })
             .catch(err => {

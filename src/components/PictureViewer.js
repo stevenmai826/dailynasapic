@@ -2,6 +2,11 @@ import React from 'react';
 
 export class PictureViewer extends React.Component {
     render() {
-        return <img src={this.props.src} alt={'Nasa'} />
+        return (
+            <div>
+              <img src={this.props.src} alt={'Nasa'} />
+              <p>Explanation: {this.props.exp}</p>
+            </div>
+        );
     }
 }
